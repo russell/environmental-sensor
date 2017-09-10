@@ -1,2 +1,2 @@
-nose
-sphinx
+-e git+https://github.com/adafruit/Adafruit_Python_DHT@master#egg=Adafruit_DHT
+-e git+https://github.com/russell/particle-sensor@master#egg=particle_sensor
