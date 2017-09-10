@@ -23,6 +23,12 @@ def make_message(name, value):
             'retain': False,
             'qos': 0}
 
+def make_dht22_message(name, value):
+    return {'topic': "%s/dht22/%s" % (HOST_NAME, name),
+            'payload': value,
+            'retain': False,
+            'qos': 0}
+
 
 class MQTTPublisher:
     def __init__(self, hostname):
@@ -43,10 +49,10 @@ class MQTTPublisher:
 
         humidity, temperature = Adafruit_DHT.read(Adafruit_DHT.DHT22, 22)
         if temperature:
-            msgs.append(make_message('temperature', temperature))
+            msgs.append(make_dht22_message('temperature', temperature))
 
         if humidity:
-            msgs.append(make_message('humidity', humidity))
+            msgs.append(make_dht22_message('humidity', humidity))
 
         LOGGER.info("Temperature: %0.1f \tHumidity: %0.1f\tPM 1.0: %s \tPM 2.5: %s \tPM 10: %s",
                     temperature or 0.0, humidity or 0.0, data['PM 1.0'], data['PM 2.5'], data['PM 10'])
