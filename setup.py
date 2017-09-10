@@ -19,6 +19,9 @@ setup(
     url='https://github.com/russell/environmental-sensor',
     license=LICENSE,
     packages=find_packages(exclude=('tests', 'docs')),
+    install_requires=[
+        'paho-mqtt',
+    ],
     entry_points={
         'console_scripts': [
             'es-mqtt = environmental_sensor.cli:main'
