@@ -3,14 +3,19 @@
 
 import logging
 import socket
-import paho.mqtt.publish as publish
 
-import particle_sensor as pm2
+import paho.mqtt.publish as publish
+import RPi.GPIO as GPIO
 import Adafruit_DHT
+import particle_sensor
 
 LOGGER = logging.getLogger(__name__)
 
 HOST_NAME = socket.gethostname()
+
+# BCM pin layout
+SET_PIN = 27
+RESET_PIN = 17
 
 def make_message(name, value):
     return {'topic': "%s/plantower/%s" % (HOST_NAME, name),
@@ -77,10 +82,23 @@ def main():
         format='%(asctime)s %(name)s %(levelname)s %(message)s')
 
     handler = MQTTPublisher(args.hostname)
-    sensor = pm2.PySerialCollector("/dev/ttyS0",
-                                   pm2.SUPPORTED_SENSORS["plantower,pms7003"],
-                                   handler.handle_data)
-    sensor.run()
+    sensor = particle_sensor.PySerialCollector(
+        "/dev/ttyS0",
+        particle_sensor.SUPPORTED_SENSORS["plantower,pms7003"],
+        handler.handle_data)
+
+    try:
+        GPIO.setmode(GPIO.BCM)
+
+        GPIO.setup(SET_PIN, GPIO.OUT)
+        GPIO.output(SET_PIN, GPIO.HIGH)
+
+        GPIO.setup(RESET_PIN, GPIO.OUT)
+        GPIO.output(RESET_PIN, GPIO.HIGH)
+
+        sensor.run()
+    finally:
+        GPIO.cleanup()
 
 
 if __name__ == '__main__':

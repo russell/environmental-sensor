@@ -22,6 +22,7 @@ setup(
     install_requires=[
         'paho-mqtt',
         'pyserial',
+        'RPi.GPIO',
     ],
     entry_points={
         'console_scripts': [
