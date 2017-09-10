@@ -66,6 +66,9 @@ def main():
         '-v', '--verbose', action='count', default=0,
         help="Increase verbosity (specify multiple times for more)")
     parser.add_argument(
+        '--serial', action='store', default='/dev/ttyS0',
+        help="The serial port to listen to data from the particle sensor on")
+    parser.add_argument(
         '--hostname', action='store', required=True,
         help="The host to publish data to")
 
@@ -83,7 +86,7 @@ def main():
 
     handler = MQTTPublisher(args.hostname)
     sensor = particle_sensor.PySerialCollector(
-        "/dev/ttyS0",
+        args.serial,
         particle_sensor.SUPPORTED_SENSORS["plantower,pms7003"],
         handler.handle_data)
 
